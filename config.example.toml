@@ -1,0 +1,52 @@
+# Market Watcher example configuration.
+# Copy to config.toml and edit:   Copy-Item config.example.toml config.toml
+# Every setting is optional; omitted settings use the Python defaults in
+# market_watcher/config.py and market_watcher/scoring.py.
+
+# Stock universe to scan (Yahoo Finance symbols). Holdings are NOT used.
+universe = ["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "JPM", "XOM", "UNH", "COST"]
+
+# Benchmark for relative returns.
+benchmark = "SPY"
+
+database_path = "data/market_watcher.db"
+export_dir = "exports"
+
+[data]
+provider = "yfinance"      # "yfinance" (live, unofficial, may be delayed) or "demo" (SIMULATED)
+history_days = 450         # calendar days of daily bars to request (>= ~300 for SMA200)
+min_sessions = 60          # fewer sessions -> INSUFFICIENT DATA
+max_stale_days = 4         # calendar days since last bar before data is flagged stale
+retries = 1                # extra attempts per ticker after a provider error
+
+[indicators]
+rvol_window = 20           # relative volume vs mean of the preceding N sessions
+rsi_window = 14
+atr_window = 14
+cmf_window = 20
+obv_window = 20
+sma_fast = 50
+sma_slow = 200
+return_short = 20          # sessions, benchmark-relative return
+return_long = 63
+
+[scoring]
+# Component weights (relative).
+weight_volume_pressure = 25.0
+weight_relative_strength = 20.0
+weight_trend = 20.0
+weight_cmf = 15.0
+weight_obv = 10.0
+weight_rsi = 10.0
+# Label thresholds on the final -100..100 score.
+buy_threshold = 40.0
+avoid_threshold = -20.0
+# See market_watcher/scoring.py (ScoringConfig) for every tunable value.
+
+[ollama]
+enabled = true                       # scans still run if Ollama is down
+base_url = "http://localhost:11434"
+model = "qwen3:8b"
+timeout_seconds = 120.0
+temperature = 0.2
+explain_top_n = 5

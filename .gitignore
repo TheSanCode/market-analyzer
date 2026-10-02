@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Market Watcher local state
+config.toml
+data/*.db
+exports/
