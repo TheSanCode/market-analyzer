@@ -1,0 +1,61 @@
+universe:
+  include_sp500: true
+  stocks: []
+  stock_sectors: {}
+  benchmark: SPY
+  sector_etfs:
+    Communication Services: [XLC]
+    Consumer Discretionary: [XLY]
+    Consumer Staples: [XLP]
+    Energy: [XLE]
+    Financials: [XLF]
+    Health Care: [XLV]
+    Industrials: [XLI]
+    Materials: [XLB]
+    Real Estate: [XLRE]
+    Technology: [XLK]
+    Utilities: [XLU]
+  demo_tickers: [AAPL, MSFT, NVDA, JPM, SPY, XLF, XLK, XLE]
+  demo_stock_sectors:
+    AAPL: Information Technology
+    MSFT: Information Technology
+    NVDA: Information Technology
+    JPM: Financials
+
+data:
+  provider: yfinance
+  period: 2y
+  stale_after_days: 7
+  retries: 3
+  retry_delay_seconds: 1
+  fallback_ticker_limit: 20
+
+scoring:
+  buy_threshold: 70
+  watch_threshold: 45
+  minimum_factor_coverage: 0.5
+  weights:
+    rvol_20: 15
+    return_20: 10
+    return_60: 15
+    relative_20: 10
+    relative_60: 10
+    sma_50: 15
+    sma_200: 15
+    rsi_14: 5
+    cmf_20: 5
+
+ollama:
+  endpoint: http://localhost:11434
+  model: qwen3:8b
+
+storage:
+  database: market_watcher.sqlite
+
+reports:
+  directory: reports
+
+backtest:
+  holding_sessions: 20
+  fee_bps: 5
+  slippage_bps: 5
